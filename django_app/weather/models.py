@@ -3,14 +3,14 @@ from django.db import models
 
 # 날씨 분류
 class WeatherTag(models.Model):
-    weather1 = models.IntegerField()
-    weather2 = models.IntegerField()
-    weather3 = models.IntegerField()
-    weather4 = models.IntegerField()
-    weather5 = models.IntegerField()
+    sunny = models.IntegerField(verbose_name='맑음')
+    foggy = models.IntegerField(verbose_name='안개')
+    rainy = models.IntegerField(verbose_name='비')
+    cloudy = models.IntegerField(verbose_name='흐림')
+    snowy = models.IntegerField(verbose_name='눈')
 
 
-# 사용자의 위치를 받아와 날씨정보 4시간마다 DB에 업데이트
+# 사용자의 위치를 받아와 날씨정보 ()시간마다 DB에 업데이트
 class Weather(models.Model):
     latitude = models.FloatField(verbose_name='위도')
     longitude = models.FloatField(verbose_name='경도')
