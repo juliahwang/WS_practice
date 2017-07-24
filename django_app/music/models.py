@@ -18,5 +18,6 @@ class Music(models.Model):
     name_singer = models.CharField(max_length=100)
     file_music = models.FileField(upload_to='music')
     name_album = models.CharField(max_length=100)
-    date_created = models.DateTimeField(auto_now_add=True)
-    tag_weather = models.ForeignKey(WeatherTag, on_delete=models.PROTECT)
+    # date_created = models.DateTimeField(auto_now_add=True)
+    tag_weather = models.CharField(max_length=100, choices=WEATHER_CHOICES)
+
