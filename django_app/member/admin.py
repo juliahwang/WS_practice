@@ -12,13 +12,14 @@ class MyUserAdmin(UserAdmin):
     list_display = (
         'email',
         'username',
+        'img_profile',
         'is_admin',
     )
     list_filter = (
         'is_admin',
     )
     fieldsets = (
-        (None, {'fields': ('email', 'password',)}),
+        (None, {'fields': ('email', 'img_profile', 'username', 'password',)}),
         ('Permissions', {'fields': ('is_admin',)}),
     )
 
@@ -26,7 +27,13 @@ class MyUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'username', 'password1', 'password2')
+            'fields': (
+                'email',
+                'username',
+                'img_profile',
+                'password1',
+                'password2'
+            )
         })
     )
     search_fields = ('email',)

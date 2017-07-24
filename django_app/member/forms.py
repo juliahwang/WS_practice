@@ -1,5 +1,4 @@
 from django import forms
-from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from member.models import MyUser
@@ -9,6 +8,14 @@ class UserCreationForm(forms.ModelForm):
     """
     유저 생성폼.
     """
+    username = forms.CharField(
+        label='username',
+        widget=forms.TextInput,
+    )
+    img_profile = forms.ImageField(
+        label='img_profile',
+        widget=forms.FileInput,
+    )
     password1 = forms.CharField(
         label='password1',
         widget=forms.PasswordInput,
@@ -25,6 +32,11 @@ class UserCreationForm(forms.ModelForm):
             'username',
             'img_profile',
         )
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if username and MyUser.objects.filter(username=username).exists():
+            raise forms.ValidationError('다른 사용자가 사용하고 있는 이름입니다.')
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
@@ -51,6 +63,7 @@ class UserChangeForm(forms.ModelForm):
         model = MyUser
         fields = (
             'email',
+            'img_profile',
             'password',
             'username',
             'is_active',
