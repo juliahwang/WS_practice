@@ -45,10 +45,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'member',
-    'music',
-    'weather',
+
+    ##########
+    # Custom #
+    ##########
     'django_extensions',
+    'weather',
+    'music',
+    'member',
 ]
 
 MIDDLEWARE = [

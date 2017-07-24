@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.core.validators import validate_email
 
 from member.models import MyUser
 
@@ -8,6 +9,10 @@ class UserCreationForm(forms.ModelForm):
     """
     유저 생성폼.
     """
+    email = forms.EmailField(
+        label='email',
+        widget=forms.EmailInput,
+    )
     username = forms.CharField(
         label='username',
         widget=forms.TextInput,
@@ -32,6 +37,15 @@ class UserCreationForm(forms.ModelForm):
             'username',
             'img_profile',
         )
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email and validate_email(email):
+            return email
+        elif email and MyUser.objects.filter(email=email).exists():
+            raise forms.ValidationError('이미 가입된 이메일입니다.')
+        else:
+            raise forms.ValidationError('이메일 양식이 올바르지 않습니다.')
 
     def clean_username(self):
         username = self.cleaned_data.get('username')

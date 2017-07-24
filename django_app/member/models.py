@@ -1,11 +1,14 @@
-from django.contrib.auth.base_user import BaseUserManager
-from django.core.mail import send_mail
 from django.contrib.auth import models as auth_models
-from django.db import models
+from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, AbstractUser
+from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
+from django.core.validators import validate_email
+from django.db import models
+from django.utils.translation import ugettext_lazy as _
+
 from config import settings
 from music.models import Music
-from django.utils.translation import ugettext_lazy as _
 
 __all__ = (
     'MyUser',
@@ -16,27 +19,35 @@ __all__ = (
 
 class MyUserManager(BaseUserManager):
     def create_user(self, email, username, password=None):
-        user = self.model(
-            email=self.normalize_email(email),
-            username=username,
-            # name=name,
-        )
-        user.set_password(password)
-        user.save()
-        return user
+        try:
+            validate_email(email)
+            user = self.model(
+                email=self.normalize_email(email),
+                username=username,
+                # name=name,
+            )
+            user.set_password(password)
+            user.save()
+            return user
+        except ValidationError:
+            raise ValidationError('이메일 양식이 올바르지 않습니다.')
 
     def create_superuser(self, email, username, password=None):
-        user = self.create_user(
-            email=email,
-            username=username,
-            # name=name,
-            password=password,
-        )
-        user.is_admin = True
-        user.is_superuser = True
-        user.is_active = True
-        user.save()
-        return user
+        try:
+            validate_email(email)
+            user = self.create_user(
+                email=email,
+                username=username,
+                # name=name,
+                password=password,
+            )
+            user.is_admin = True
+            user.is_superuser = True
+            user.is_active = True
+            user.save()
+            return user
+        except ValidationError:
+            raise ValidationError('이메일 양식이 올바르지 않습니다.')
 
 
 # 사용자 정보 모델
@@ -44,9 +55,10 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         verbose_name='Email ID',
         max_length=255,
-        unique=True
+        unique=True,
+        null=True,
     )
-    username = models.CharField(max_length=40, unique=True)
+    username = models.CharField(max_length=40, null=True, unique=True)
     first_name = models.CharField(max_length=20, default='')
     last_name = models.CharField(max_length=20, default='')
     # TODO img_profile - CustomImageField 설정 필요
@@ -102,7 +114,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 # 유저별 플레이리스트 모델
 class Playlist(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    name_playlist = models.CharField(max_length=30, default='')
+    name_playlist = models.CharField(max_length=30, default='playlist')
 
 
 # 유저의 플레이리스트 내 음악 목록 모델
