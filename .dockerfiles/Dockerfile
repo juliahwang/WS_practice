@@ -26,7 +26,7 @@ COPY        .config/nginx/nginx-app.conf /etc/nginx/sites-available/
 RUN         ln -sf /etc/nginx/sites-available/nginx-app.conf /etc/nginx/sites-enabled/nginx.conf
 RUN         rm -rf /etc/nginx/sites-enabled/default
 
-# collectstatic
+# collectstatic 실행
 RUN         /root/.pyenv/versions/prac_teamproject/bin/python /srv/00_practice/django_app/manage.py collectstatic --settings=config.settings.deploy --noinput
 
 CMD         supervisord -n
