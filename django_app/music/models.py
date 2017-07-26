@@ -64,6 +64,7 @@ from config import settings
 
 __all__ = (
     'Music',
+    'Weather'
 )
 
 

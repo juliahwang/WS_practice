@@ -12,12 +12,12 @@ from music.models import Music
 __all__ = (
     'MyUser',
     'Playlist',
-    'PLMusics',
+    'PlaylistMusics',
 )
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, username, password=None):
+    def create_user(self, email, username, password=None, **extra_fields):
         try:
             validate_email(email)
             user = self.model(
@@ -25,13 +25,15 @@ class MyUserManager(BaseUserManager):
                 username=username,
                 # name=name,
             )
+            extra_fields.setdefault('is_staff', False)
+            extra_fields.setdefault('is_superuser', False)
             user.set_password(password)
             user.save()
-            return user
+            return self._create_user(username, email, password, **extra_fields)
         except ValidationError:
             raise ValidationError('이메일 양식이 올바르지 않습니다.')
 
-    def create_superuser(self, email, username, password=None):
+    def create_superuser(self, email, username, password=None, **extra_fields):
         try:
             validate_email(email)
             user = self.create_user(
@@ -44,7 +46,7 @@ class MyUserManager(BaseUserManager):
             user.is_superuser = True
             user.is_active = True
             user.save()
-            return user
+            return self._create_user(username, email, password, **extra_fields)
         except ValidationError:
             raise ValidationError('이메일 양식이 올바르지 않습니다.')
 
@@ -52,14 +54,14 @@ class MyUserManager(BaseUserManager):
 # 사용자 정보 모델
 class MyUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
-        verbose_name='Email ID',
+        _('email address'),
         max_length=255,
         unique=True,
         null=True,
     )
-    username = models.CharField(max_length=40, null=True, unique=True)
-    first_name = models.CharField(max_length=20, default='')
-    last_name = models.CharField(max_length=20, default='')
+    username = models.CharField(_('username'), max_length=40, null=True, unique=True)
+    first_name = models.CharField(_('first name'), max_length=20, default='')
+    last_name = models.CharField(_('last name'), max_length=20, default='')
     # TODO img_profile - CustomImageField 설정 필요
     img_profile = models.ImageField(upload_to='member', blank=True)
     is_admin = models.BooleanField(default=False)
@@ -116,13 +118,24 @@ class Playlist(models.Model):
     name_playlist = models.CharField(max_length=30, default='playlist')
     playlist_musics = models.ManyToManyField(
             Music,
-            through='PLMusics',
+            through='PlaylistMusics',
             related_name='playlist_musics'
         )
 
+    def __str__(self):
+        return '{}의 {}'.format(
+            self.user,
+            self.name_playlist)
+
 
 # 유저의 플레이리스트 내 음악 목록 모델
-class PLMusics(models.Model):
+class PlaylistMusics(models.Model):
     name_playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE)
     music = models.ForeignKey(Music, on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '리스트 {}의 음악 {}'.format(
+            self.name_playlist,
+            self.music
+        )
