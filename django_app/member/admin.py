@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 
 from .forms import UserChangeForm, UserCreationForm
-from .models import MyUser
+from .models import MyUser, Playlist, PLMusics
 
 
 class MyUserAdmin(UserAdmin):
@@ -40,4 +40,7 @@ class MyUserAdmin(UserAdmin):
     ordering = ('email',)
 
 admin.site.register(MyUser, MyUserAdmin)
+admin.site.register(Playlist)
+admin.site.register(PLMusics)
+
 admin.site.unregister(Group)

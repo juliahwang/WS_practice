@@ -114,9 +114,15 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 class Playlist(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name_playlist = models.CharField(max_length=30, default='playlist')
+    playlist_musics = models.ManyToManyField(
+            Music,
+            through='PLMusics',
+            related_name='playlist_musics'
+        )
 
 
 # 유저의 플레이리스트 내 음악 목록 모델
 class PLMusics(models.Model):
     name_playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE)
     music = models.ForeignKey(Music, on_delete=models.CASCADE)
+    date_added = models.DateTimeField(auto_now_add=True)
