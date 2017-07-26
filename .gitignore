@@ -1,6 +1,7 @@
 ### Custom ###
 .idea/
 .media/
+.config_secret/
 
 ### Django ###
 *.log
