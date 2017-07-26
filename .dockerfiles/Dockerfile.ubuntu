@@ -2,10 +2,9 @@
 # docker build -t [eb_ubuntu] [.] -f [.dockerfiles/dockerfile.ubuntu]
 
 
-
 # ubuntu 설치 ( 원래는 배포용 유저를 만들어야함. 여기서는 root로 작업함 )
 FROM        ubuntu:16.04
-MAINTAINER  recordingbetter@gmail.com
+MAINTAINER  qufskan9396@gmail.com
 
 # 필요한소스설치 (-y는 자동으로 y를 눌러줌)
 RUN         apt-get -y update
@@ -33,10 +32,10 @@ RUN         echo 'eval "$(pyenv init -)"\n' >> ~/.zshrc
 RUN         echo 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.zshrc
 
 # pyenv virtualenv
-RUN         pyenv virtualenv 3.5.3 onoff_crawling
+RUN         pyenv virtualenv 3.6.1 prac_teamproject
 
 # uwsgi install
-RUN         /root/.pyenv/versions/onoff_crawling/bin/pip install uwsgi
+RUN         /root/.pyenv/versions/prac_teamproject/bin/pip install uwsgi
 
 # Nginx install
 RUN         apt-get -y install nginx

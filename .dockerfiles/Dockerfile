@@ -1,14 +1,14 @@
 
-FROM        eb_ubuntu
-MAINTAINER  recordingbetter@gmail.com
+FROM        eb_wsp
+MAINTAINER  qufskan9396@gmail.com
 
 # 현재 경로의 모든 파일들을 컨테이너의 /srv/deploy_eb/docker 폴더에 복사
-COPY        . /srv/onoff_crawling
+COPY        . /srv/00_practice
 # cd /srv/deploy_eb/docker 와 같음
-WORKDIR     /srv/onoff_crawling
+WORKDIR     /srv/00_practice
 
 # requiremments.txt 설치
-RUN         /root/.pyenv/versions/onoff_crawling/bin/pip install -r .requirements/deploy.txt
+RUN         /root/.pyenv/versions/prac_teamproject/bin/pip install -r .requirements/deploy.txt
 
 # .config/supervisor/uwsgi.conf로 이동
 #RUN         uwsgi --http :8000 --chdir /srv/deploy_ec2/django_app --home /root/.pyenv/versions/deploy_eb_docker -w config.settings.debug
@@ -27,7 +27,7 @@ RUN         ln -sf /etc/nginx/sites-available/nginx-app.conf /etc/nginx/sites-en
 RUN         rm -rf /etc/nginx/sites-enabled/default
 
 # collectstatic
-RUN         /root/.pyenv/versions/onoff_crawling/bin/python /srv/onoff_crawling/django_app/manage.py collectstatic --settings=config.settings.deploy --noinput
+RUN         /root/.pyenv/versions/prac_teamproject/bin/python /srv/00_practice/django_app/manage.py collectstatic --settings=config.settings.deploy --noinput
 
 CMD         supervisord -n
 # 80포트와 8000포트를 열어줌
