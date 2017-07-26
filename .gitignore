@@ -1,6 +1,6 @@
 ### Custom ###
 .idea/
-.media/
+.static_root/
 .config_secret/
 
 ### Django ###
