@@ -15,7 +15,7 @@
 #         ('snowy', '눈'),
 #         ('foggy', '안개'),
 #     )
-#     name_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#     name_author = models.ForeignKey(User, on_delete=models.CASCADE)
 #     img_music = models.ImageField(upload_to='img_music', blank=True)
 #     name_music = models.CharField(max_length=100)
 #     name_singer = models.CharField(max_length=100)
@@ -57,20 +57,20 @@
 #     time_range = models.DateTimeField(auto_created=True)
 #     name_area = models.CharField(max_length=100)
 #     weather = models.CharField(max_length=100)
-
-
+from django.contrib.auth import get_user_model
 from django.db import models
-from config import settings
 
 __all__ = (
     'Music',
     'Weather'
 )
 
+User = get_user_model()
+
 
 # 전체 음악파일/정보 모델
 class Music(models.Model):
-    name_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name_author = models.ForeignKey(User, on_delete=models.CASCADE)
     img_music = models.ImageField(upload_to='img_music', blank=True)
     name_music = models.CharField(max_length=100)
     name_singer = models.CharField(max_length=100)

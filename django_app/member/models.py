@@ -1,4 +1,4 @@
-from django.contrib.auth import models as auth_models
+from django.contrib.auth import models as auth_models, get_user_model
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, AbstractUser
 from django.core.exceptions import ValidationError
@@ -8,6 +8,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from config import settings
 from music.models import Music
+
+User = get_user_model()
 
 __all__ = (
     'MyUser',
@@ -114,7 +116,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
 # 유저별 플레이리스트 모델
 class Playlist(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name_playlist = models.CharField(max_length=30, default='playlist')
     playlist_musics = models.ManyToManyField(
             Music,
