@@ -18,7 +18,7 @@ RUN         curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/maste
 ENV         PATH /root/.pyenv/bin:$PATH
 
 # python 설치
-RUN         pyenv install 3.5.3
+RUN         pyenv install 3.6.1
 
 # zsh 설치, 적용
 RUN         apt-get -y install zsh
@@ -38,6 +38,7 @@ RUN         pyenv virtualenv 3.6.1 prac_teamproject
 RUN         /root/.pyenv/versions/prac_teamproject/bin/pip install uwsgi
 
 # Nginx install
+RUN         apt-get update
 RUN         apt-get -y install nginx
 
 # Superviser

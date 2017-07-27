@@ -1,4 +1,4 @@
-FROM        eb_wsp
+FROM        juliahwang/weatherpractice
 MAINTAINER  qufskan9396@gmail.com
 
 ENV         LANG C.UTF-8
