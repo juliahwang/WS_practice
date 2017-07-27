@@ -1,15 +1,13 @@
 from django.contrib.auth import models as auth_models, get_user_model
 from django.contrib.auth.base_user import BaseUserManager
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, AbstractUser
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from config import settings
-from music.models import Music
 
-User = get_user_model()
+from django.utils.translation import ugettext_lazy as _
+
 
 __all__ = (
     'MyUser',
@@ -31,7 +29,7 @@ class MyUserManager(BaseUserManager):
             extra_fields.setdefault('is_superuser', False)
             user.set_password(password)
             user.save()
-            return self._create_user(username, email, password, **extra_fields)
+            return user
         except ValidationError:
             raise ValidationError('이메일 양식이 올바르지 않습니다.')
 
@@ -48,7 +46,7 @@ class MyUserManager(BaseUserManager):
             user.is_superuser = True
             user.is_active = True
             user.save()
-            return self._create_user(username, email, password, **extra_fields)
+            return user
         except ValidationError:
             raise ValidationError('이메일 양식이 올바르지 않습니다.')
 
@@ -114,30 +112,5 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         return self.email if self.email else self.username
 
 
-# 유저별 플레이리스트 모델
-class Playlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name_playlist = models.CharField(max_length=30, default='playlist')
-    playlist_musics = models.ManyToManyField(
-            Music,
-            through='PlaylistMusics',
-            related_name='playlist_musics'
-        )
+User = get_user_model()
 
-    def __str__(self):
-        return '{}의 {}'.format(
-            self.user,
-            self.name_playlist)
-
-
-# 유저의 플레이리스트 내 음악 목록 모델
-class PlaylistMusics(models.Model):
-    name_playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE)
-    music = models.ForeignKey(Music, on_delete=models.CASCADE)
-    date_added = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return '리스트 {}의 음악 {}'.format(
-            self.name_playlist,
-            self.music
-        )

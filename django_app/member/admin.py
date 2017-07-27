@@ -3,7 +3,8 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 from django.utils.translation import ugettext_lazy as _
 from .forms import UserChangeForm, UserCreationForm, UserCreateForm
-from .models import MyUser, Playlist, PlaylistMusics
+from .models import MyUser
+from music.models import Playlist, PlaylistMusics
 
 
 class MyUserAdmin(UserAdmin):

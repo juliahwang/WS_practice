@@ -13,7 +13,7 @@ ALLOWED_HOSTS = config_secret_deploy['django']['allowed_hosts']
 
 
 # Database
-DATABASES = config_secret_deploy['django']['databases']
+DATABASES = config_secret_deploy['django']['database']
 
 
 ### AWS settings ###

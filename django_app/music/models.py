@@ -95,3 +95,32 @@ class Weather(models.Model):
     time_range = models.DateTimeField(auto_created=True)
     name_area = models.CharField(max_length=100)
     weather = models.CharField(max_length=100)
+
+
+# 유저별 플레이리스트 모델
+class Playlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name_playlist = models.CharField(max_length=30, default='playlist')
+    playlist_musics = models.ManyToManyField(
+            'Music',
+            through='PlaylistMusics',
+            related_name='playlist_musics'
+        )
+
+    def __str__(self):
+        return '{}의 {}'.format(
+            self.user,
+            self.name_playlist)
+
+
+# 유저의 플레이리스트 내 음악 목록 모델
+class PlaylistMusics(models.Model):
+    name_playlist = models.ForeignKey('Playlist', on_delete=models.CASCADE)
+    music = models.ForeignKey('Music', on_delete=models.CASCADE)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '리스트 {}의 음악 {}'.format(
+            self.name_playlist,
+            self.music
+        )
