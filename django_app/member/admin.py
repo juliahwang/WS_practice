@@ -32,6 +32,6 @@ class MyUserAdmin(UserAdmin):
 
 
 admin.site.register(MyUser, MyUserAdmin)
-admin.site.unregister(Group)
+# admin.site.unregister(Group)
 admin.site.register(Playlist)
 admin.site.register(PlaylistMusics)

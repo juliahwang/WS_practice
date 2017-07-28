@@ -1,6 +1,6 @@
 from django.contrib.auth import models as auth_models, get_user_model
 from django.contrib.auth.base_user import BaseUserManager
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, AbstractUser
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import validate_email
@@ -16,6 +16,7 @@ __all__ = (
 )
 
 
+AbstractUser
 class MyUserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
         try:
