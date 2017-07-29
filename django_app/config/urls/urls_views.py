@@ -21,7 +21,7 @@ from config import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^music/', include('music.urls')),
+    url(r'^music/', include('music.urls.urls_views')),
 ]
 
 urlpatterns += static(

@@ -11,11 +11,11 @@ class UserCreateForm(UserCreationForm):
         fields = (
             'email',
             'img_profile',
-            'username',
+            "nickname",
             'password1',
             'password2',
-            'is_active',
-            'is_admin',
+            # 'is_active',
+            # 'is_admin',
         )
 
     def save(self, commit=True):
@@ -38,9 +38,9 @@ class UserChangeForm(forms.ModelForm):
             'email',
             'img_profile',
             'password',
-            'username',
-            'is_active',
-            'is_admin',
+            "nickname",
+            # 'is_active',
+            # 'is_admin',
         )
 
     def clean_password(self):

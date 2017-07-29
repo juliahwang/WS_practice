@@ -1,7 +1,9 @@
 ### Custom ###
 .idea/
 .static_root/
+.media/
 .config_secret/
+db.sqlite3
 
 ### Django ###
 *.log

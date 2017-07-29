@@ -18,12 +18,12 @@ __all__ = (
 
 AbstractUser
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, username, password=None, **extra_fields):
+    def create_user(self, email, nickname, password=None, **extra_fields):
         try:
             validate_email(email)
             user = self.model(
                 email=self.normalize_email(email),
-                username=username,
+                nickname=nickname,
                 # name=name,
             )
             extra_fields.setdefault('is_staff', False)
@@ -34,12 +34,12 @@ class MyUserManager(BaseUserManager):
         except ValidationError:
             raise ValidationError('이메일 양식이 올바르지 않습니다.')
 
-    def create_superuser(self, email, username, password=None, **extra_fields):
+    def create_superuser(self, email, nickname, password=None, **extra_fields):
         try:
             validate_email(email)
             user = self.create_user(
                 email=email,
-                username=username,
+                nickname=nickname,
                 # name=name,
                 password=password,
             )
@@ -60,7 +60,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         unique=True,
         null=True,
     )
-    username = models.CharField(_('username'), max_length=40, null=True, unique=True)
+    nickname = models.CharField(_('nickname'), max_length=40, null=True, unique=True)
     first_name = models.CharField(_('first name'), max_length=20, default='')
     last_name = models.CharField(_('last name'), max_length=20, default='')
     # TODO img_profile - CustomImageField 설정 필요
@@ -81,10 +81,10 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', ]
+    REQUIRED_FIELDS = ['nickname', ]
 
     def __str__(self):
-        return "username: {}".format(self.username if self.username else self.email)
+        return "nickname: {}".format(self.nickname if self.nickname else self.email)
 
     @property
     def is_staff(self):
@@ -107,10 +107,10 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         return auth_models._user_has_perm(self, perm, obj)
 
     def get_full_name(self):
-        return self.email if self.email else self.username
+        return self.email if self.email else self.nickname
 
     def get_short_name(self):
-        return self.email if self.email else self.username
+        return self.email if self.email else self.nickname
 
 
 User = get_user_model()
