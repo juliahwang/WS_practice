@@ -57,8 +57,13 @@
 #     time_range = models.DateTimeField(auto_created=True)
 #     name_area = models.CharField(max_length=100)
 #     weather = models.CharField(max_length=100)
+import os
+from forecastiopy import *
+import requests
+import config
 from django.contrib.auth import get_user_model
 from django.db import models
+
 
 __all__ = (
     'Music',
@@ -86,6 +91,12 @@ class Music(models.Model):
     def __str__(self):
         return self.name_music
 
+    def get_mp3(self, current):
+        for path, dirs, files in os.walk(current):
+            if files:
+                for f in files:
+                    name = os.path.splitext(f)
+
 
 # 사용자의 위치를 받아와 날씨정보 ()시간마다 DB에 업데이트
 class Weather(models.Model):
@@ -95,6 +106,44 @@ class Weather(models.Model):
     time_range = models.DateTimeField(auto_created=True)
     name_area = models.CharField(max_length=100)
     weather = models.CharField(max_length=100)
+
+    def get_location(self, lat, long):
+        """
+        구글 역지오코딩을 사용해 위도/경도 정보를 사용자 위치정보로 리턴
+        :param lat: 위도(horizontal location) 정보
+        :param long: 경도(vertical location) 정보
+        :return: 사용자 위치정보
+        """
+        google_api_key = config.settings.GOOGLE_API_KEY
+        url = 'https://maps.googleapis.com/maps/api/geocode/json' \
+              '?latlng={lat},{long}' \
+              '&key={key}' \
+              '&language=ko' \
+              '&result_type={result_type}'.format(lat=lat,
+                                                  long=long,
+                                                  key=google_api_key,
+                                                  result_type="sublocality"
+                                                  )
+        addr = requests.get(url).json()['results'][4]['address_components'][1]['long_name']
+        return addr
+
+    def get_weather_info(self, lat, long):
+        """
+        날씨 정보 API를 통해 위도/경도 정보로 해당 지역의 날씨정보를 리턴
+        :param lat: 위도(horizontal location) 정보
+        :param long: 경도(vertical location) 정보
+        :return: 사용자 위치의 날씨 정보
+        """
+        key = config.settings.DARKSKY_API_KEY
+        fio = ForecastIO.ForecastIO(key,
+                                    lat=lat,
+                                    long=long
+                                    )
+        current = FIOCurrently.FIOCurrently(fio)
+        import time
+        cur_hour = time.gmtime(current.time).tm_hour
+        cur_icon = current.icon
+        return cur_icon
 
 
 # 유저별 플레이리스트 모델

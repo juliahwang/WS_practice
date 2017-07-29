@@ -46,6 +46,9 @@ config_secret_debug = json.loads(open(CONFIG_SECRET_DEBUG_FILE).read())
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config_secret_common['django']['secret_key']
+GOOGLE_API_KEY = config_secret_common['googleapi']['geocoding_api_key']
+DARKSKY_API_KEY = config_secret_common['weatherinfoapi']['darksky_api_key']
+FACEBOOK_API_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
