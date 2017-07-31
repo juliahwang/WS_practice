@@ -1,13 +1,13 @@
-from django.contrib.auth import get_user_model, login as django_login
+from django.contrib.auth import get_user_model, login as django_login, logout as django_logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
-from member.forms import SignupForm, UserCreateForm
+from member.forms import SignupForm, UserCreateForm, LoginForm
 from member.tokens import account_activation_token
 
 User = get_user_model()
@@ -55,3 +55,22 @@ def activate(request, uidb64, token):
         print(uidb64)
         print(user)
         return HttpResponse('Activation link is invalid. Please try again.')
+
+def login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data['user']
+            django_login(request, user)
+        return redirect('music:musiclist')
+    form = LoginForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'login.html', context)
+
+
+def logout(request):
+    django_logout(request)
+    return redirect('member:login')
+

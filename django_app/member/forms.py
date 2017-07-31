@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.forms import ReadOnlyPasswordHashField, UserCreationForm
 
 
@@ -51,19 +51,10 @@ class UserChangeForm(forms.ModelForm):
         return self.initial["password"]
 
 
-class SignupForm1(UserCreateForm):
-    class Meta:
-        model = User
-        fields = (
-            'email',
-            'img_profile',
-            'nickname',
-            'password1',
-            'password2'
-        )
-
-
 class SignupForm(forms.Form):
+    """
+    회원가입
+    """
     email = forms.EmailField(
         widget=forms.EmailInput(
             attrs={
@@ -130,3 +121,40 @@ class SignupForm(forms.Form):
             is_active=False,
         )
         return user
+
+
+class LoginForm(forms.Form):
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={
+                'placeholder': '가입한 이메일계정을 입력하세요.',
+            }
+        )
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={'placeholder': '비밀번호를 입력하세요.',
+            }
+        )
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('email')
+        password = cleaned_data.get('password')
+        is_active = cleaned_data.get('is_active')
+        user = authenticate(
+            username=username,
+            password=password,
+        )
+        if user is not None:
+            self.cleaned_data['user'] = user
+        elif not is_active:
+            raise forms.ValidationError(
+                'Please confirm your email to activate the account.'
+            )
+        else:
+            raise forms.ValidationError(
+                'Login credentials not valid'
+            )
+        return self.cleaned_data

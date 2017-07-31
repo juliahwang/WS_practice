@@ -58,8 +58,6 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         null=True,
     )
     nickname = models.CharField(_('nickname'), max_length=40, null=True, unique=True)
-    first_name = models.CharField(_('first name'), max_length=20, default='')
-    last_name = models.CharField(_('last name'), max_length=20, default='')
     # TODO img_profile - CustomImageField 설정 필요
     img_profile = models.ImageField(upload_to='member', blank=True)
     is_admin = models.BooleanField(default=False)
