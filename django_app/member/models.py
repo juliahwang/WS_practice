@@ -11,12 +11,9 @@ from django.utils.translation import ugettext_lazy as _
 
 __all__ = (
     'MyUser',
-    'Playlist',
-    'PlaylistMusics',
 )
 
 
-AbstractUser
 class MyUserManager(BaseUserManager):
     def create_user(self, email, nickname, password=None, **extra_fields):
         try:
@@ -24,11 +21,11 @@ class MyUserManager(BaseUserManager):
             user = self.model(
                 email=self.normalize_email(email),
                 nickname=nickname,
-                # name=name,
             )
             extra_fields.setdefault('is_staff', False)
             extra_fields.setdefault('is_superuser', False)
             user.set_password(password)
+            user.is_active = False
             user.save()
             return user
         except ValidationError:
@@ -111,7 +108,4 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.email if self.email else self.nickname
-
-
-User = get_user_model()
 

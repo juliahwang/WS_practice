@@ -67,7 +67,9 @@ from django.db import models
 
 __all__ = (
     'Music',
-    'Weather'
+    'Weather',
+    'Playlist',
+    'PlaylistMusics',
 )
 
 User = get_user_model()

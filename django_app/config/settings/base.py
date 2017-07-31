@@ -23,7 +23,7 @@ ROOT_DIR = os.path.dirname(BASE_DIR)
 
 # TEMPLATE 경로
 # TODO 프론트엔드에서 넘겨주면 TEMPLATE_DIR 재설정
-# TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
 # .config_secret 폴더 및 하위파일 경로
 CONFIG_SECRET_DIR = os.path.join(ROOT_DIR, '.config_secret')
@@ -49,6 +49,15 @@ SECRET_KEY = config_secret_common['django']['secret_key']
 GOOGLE_API_KEY = config_secret_common['googleapi']['geocoding_api_key']
 DARKSKY_API_KEY = config_secret_common['weatherinfoapi']['darksky_api_key']
 FACEBOOK_API_KEY = ''
+
+
+# email_confirm_verification_info
+EMAIL_USE_TLS = True
+EMAIL_HOST = config_secret_common['email_confirm']['email_host']
+EMAIL_HOST_USER = config_secret_common['email_confirm']['email_account']
+EMAIL_HOST_PASSWORD = config_secret_common['email_confirm']['email_password']
+EMAIL_PORT = 587
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
@@ -91,7 +100,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            # TEMPLATE_DIR,
+            TEMPLATE_DIR,
         ],
         'APP_DIRS': True,
         'OPTIONS': {

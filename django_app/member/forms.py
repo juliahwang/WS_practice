@@ -1,13 +1,16 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField, UserCreationForm
-from member.models import MyUser
+
+
+User = get_user_model()
 
 
 class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     class Meta:
-        model = MyUser
+        model = User
         fields = (
             'email',
             'img_profile',
@@ -22,6 +25,7 @@ class UserCreateForm(UserCreationForm):
         user = super(UserCreateForm, self).save(commit=False)
         user.email = self.cleaned_data['email']
         if commit:
+            user.is_active = False
             user.save()
         return user
 
@@ -33,7 +37,7 @@ class UserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField()
 
     class Meta:
-        model = MyUser
+        model = User
         fields = (
             'email',
             'img_profile',
@@ -45,3 +49,84 @@ class UserChangeForm(forms.ModelForm):
 
     def clean_password(self):
         return self.initial["password"]
+
+
+class SignupForm1(UserCreateForm):
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'img_profile',
+            'nickname',
+            'password1',
+            'password2'
+        )
+
+
+class SignupForm(forms.Form):
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={
+                'placeholder': 'example@example.com',
+            }
+        )
+    )
+    nickname = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': '유일해야 합니다.'
+            }
+        )
+    )
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': '특수문자 포함 10~12자리',
+            }
+        )
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': '특수문자 포함 10~12자리',
+            }
+        )
+    )
+
+    def clean_nickname(self):
+        nickname = self.cleaned_data.get('nickname')
+        if nickname and User.objects.filter(nickname=nickname).exists():
+            raise forms.ValidationError(
+                'Nickname already exists'
+            )
+        return nickname
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+        # password1과 password2가 존재하고 같지 않을 때
+        if password1 and password2 and password2 != password1:
+            raise forms.ValidationError(
+                "Password2 should be identical to Password1."
+            )
+        return password2
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email and User.objects.filter(email=email).exists():
+            raise forms.ValidationError(
+                "This email account is already in use."
+            )
+        return email
+
+    def create_user(self):
+        email = self.cleaned_data['email']
+        password = self.cleaned_data['password1']
+        nickname = self.cleaned_data['nickname']
+        user = User.objects.create_user(
+            email=email,
+            nickname=nickname,
+            password=password,
+            is_active=False,
+        )
+        return user

@@ -24,7 +24,7 @@ class MyUserAdmin(UserAdmin):
         }),
     )
 
-    list_display = ('email', 'nickname', 'img_profile', 'is_admin')
+    list_display = ('email', 'nickname', 'img_profile', 'is_admin', 'is_active')
     list_filter = ('is_admin',)
     search_fields = ('nickname', 'email')
     ordering = ('nickname',)
