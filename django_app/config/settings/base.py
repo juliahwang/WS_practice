@@ -65,6 +65,15 @@ EMAIL_PORT = 587
 
 AUTH_USER_MODEL = 'member.MyUser'
 
+# Rest Framework 인증 클래스
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
+
+
 # Application definition
 
 INSTALLED_APPS = [

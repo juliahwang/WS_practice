@@ -5,4 +5,5 @@ from . import urls_apis
 urlpatterns = [
     url(r'', include(urls_views)),
     url(r'^api/', include(urls_apis)),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

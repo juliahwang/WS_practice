@@ -72,7 +72,6 @@ class Weather(models.Model):
                                                   )
         addr = requests.get(url).json()['results'][1]['address_components'][2]['long_name']
         self.location = addr
-        self.location.save()
         return addr
 
     def get_weather_info(self):

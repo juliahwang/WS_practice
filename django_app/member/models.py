@@ -106,4 +106,3 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.email if self.email else self.nickname
-
