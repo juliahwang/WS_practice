@@ -53,7 +53,7 @@ class MyUserManager(BaseUserManager):
 
 # 사용자 정보 모델
 class MyUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(
+    email = models.CharField(
         _('email address'),
         max_length=255,
         unique=True,
@@ -81,7 +81,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username', ]
 
     def __str__(self):
-        return "nickname: {}".format(self.username if self.username else self.email)
+        return "{} / {}".format(self.username, self.email)
 
     @property
     def is_staff(self):

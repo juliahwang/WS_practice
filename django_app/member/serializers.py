@@ -7,6 +7,19 @@ from rest_framework import serializers
 User = get_user_model()
 
 
+class UserListSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'username',
+            'img_profile',
+            'password',
+            'is_active',
+            'is_admin',
+        )
+
+
 class UserLoginSerializers(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -14,7 +27,6 @@ class UserLoginSerializers(serializers.ModelSerializer):
             'email',
             'username',
             'password',
-            'is_active',
         )
 
     def validate(self, data):
