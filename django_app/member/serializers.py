@@ -25,7 +25,6 @@ class UserLoginSerializers(serializers.ModelSerializer):
         model = User
         fields = (
             'email',
-            'username',
             'password',
         )
 

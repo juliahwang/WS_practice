@@ -81,7 +81,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username', ]
 
     def __str__(self):
-        return "{} / {}".format(self.username, self.email)
+        return "{}".format(self.email)
 
     @property
     def is_staff(self):
