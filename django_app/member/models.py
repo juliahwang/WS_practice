@@ -5,9 +5,11 @@ from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from django.utils.translation import ugettext_lazy as _
-
+from rest_framework.authtoken.models import Token
 
 __all__ = (
     'MyUser',
@@ -106,3 +108,13 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.email if self.email else self.nickname
+
+
+User = get_user_model()
+
+
+# 로그인시 유저의 인증 토큰을 생성하는 메서드.
+@receiver(post_save, sender=User)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)

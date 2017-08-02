@@ -91,6 +91,7 @@ INSTALLED_APPS = [
     'music',
     'member',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [

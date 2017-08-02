@@ -56,6 +56,7 @@ def activate(request, uidb64, token):
         print(user)
         return HttpResponse('Activation link is invalid. Please try again.')
 
+
 def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)

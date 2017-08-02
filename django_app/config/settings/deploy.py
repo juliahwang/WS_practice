@@ -1,9 +1,9 @@
 from .base import *
 
 
-config_secret_debug = json.loads(open(CONFIG_SECRET_DEBUG_FILE).read())
+config_secret_deploy = json.loads(open(CONFIG_SECRET_DEPLOY_FILE).read())
 
-WSGI_APPLICATION = 'config.wsgi.debug.application'
+WSGI_APPLICATION = 'config.wsgi.deploy.application'
 
 
 # DEBUG = False  == Bad Request
