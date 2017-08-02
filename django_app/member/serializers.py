@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model, authenticate
+from django.core.mail import send_mail
 from django.core.validators import validate_email
 from rest_framework import serializers
 
@@ -11,14 +12,10 @@ class UserLoginSerializers(serializers.ModelSerializer):
         model = User
         fields = (
             'email',
+            'username',
             'password',
+            'is_active',
         )
-
-    def validate_email(self, data):
-        email = data['email']
-        if email and validate_email(email):
-            pass
-
 
     def validate(self, data):
         email = data['email']
@@ -26,7 +23,8 @@ class UserLoginSerializers(serializers.ModelSerializer):
         is_active = data['is_active']
         user = authenticate(
             email=email,
-            password=password
+            password=password,
+            is_active=is_active,
         )
         if user is not None:
             self.data['user'] = user
