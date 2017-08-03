@@ -28,23 +28,24 @@ class UserLoginSerializers(serializers.ModelSerializer):
             'password',
         )
 
-    def validate(self, data):
-        email = data['email']
-        password = data['password']
-        is_active = data['is_active']
-        user = authenticate(
-            email=email,
-            password=password,
-            is_active=is_active,
-        )
-        if user is not None:
-            self.data['user'] = user
-        elif not is_active:
-            raise serializers.ValidationError(
-                'Please confirm your email to activate the account.'
-            )
-        else:
-            raise serializers.ValidationError(
-                'Login credentials not valid. Please try again.'
-            )
-        return data
+    # def validate(self, data):
+    #     email = data['email']
+    #     password = data['password']
+    #     is_active = data['is_active']
+    #     user = authenticate(
+    #         email=email,
+    #         password=password,
+    #         is_active=is_active,
+    #     )
+    #     if user is not None:
+    #         self.data['user'] = user
+    #     elif not is_active:
+    #         raise serializers.ValidationError(
+    #             'Please confirm your email to activate the account.'
+    #         )
+    #     else:
+    #         raise serializers.ValidationError(
+    #             'Login credentials not valid. Please try again.'
+    #         )
+    #     print(data)
+    #     return data
