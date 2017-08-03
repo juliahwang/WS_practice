@@ -1,1 +1,1 @@
-from .userprofile import *
+from .auth_token import *
